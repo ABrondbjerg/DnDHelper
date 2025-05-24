@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DnD Helper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<!-- Navbar -->
+<header class="bg-purple-800 text-white p-4 shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">DnD Helper</h1>
+        <nav class="space-x-6">
+            <a href="bbeg.html" class="hover:underline">BBEG</a>
+            <a href="crits.html" class="hover:underline">Crits/Fumbles</a>
+            <a href="npcs.html" class="hover:underline">NPCs</a>
+            <a href="towns.html" class="hover:underline">Towns</a>
+            <a href="generators.html" class="hover:underline">Generators</a>
+            <a href="quickref.html" class="hover:underline">Quick Reference</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Section Template -->
+<section id="bbeg" class="relative h-[400px] mb-8">
+    <img src="/images/bbeg.jpg" class="absolute inset-0 w-full h-full object-cover object-left" alt="BBEG" />
+    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+    <div class="relative z-10 flex justify-between items-center h-full max-w-7xl mx-auto px-6">
+        <div class="text-white max-w-xl">
+            <h2 class="text-4xl font-bold mb-4">BBEG Generator</h2>
+            <p class="text-lg">En BBEG (Big Bad Evil Guy) er den centrale skurk i dit eventyr. Her kan du generere uhyggelige og uforudsigelige fjender.</p>
+        </div>
+        <a href="/bbeg.html" class="bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded shadow-lg">
+            Find a BBEG
+        </a>
+    </div>
+</section>
+
+<!-- Crits/Fumbles -->
+<section id="crits" class="relative h-[400px] mb-8">
+    <img src="/images/crits.jpg" class="absolute inset-0 w-full h-full object-cover object-left" alt="Crits and Fumbles" />
+    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+    <div class="relative z-10 flex justify-between items-center h-full max-w-7xl mx-auto px-6">
+        <div class="text-white max-w-xl">
+            <h2 class="text-4xl font-bold mb-4">Crits & Fumbles</h2>
+            <p class="text-lg">Gør dine 20'ere og 1'ere uforglemmelige med vilde effekter og konsekvenser!</p>
+        </div>
+        <a href="/crits.html" class="bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded shadow-lg">
+            Rul en Crit!
+        </a>
+    </div>
+</section>
+
+<!-- Gentag tilsvarende for NPCs, Towns, Generators, Quick Reference -->
+
+</body>
+</html>
