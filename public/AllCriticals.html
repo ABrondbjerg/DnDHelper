@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <title>Critical Hit Tables</title>
+</head>
+<body class="bg-[#fefbf6] font-serif text-gray-900">
+
+<!-- Full-width navigation bar -->
+<header class="bg-purple-800 text-white p-4 shadow-md">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <h1 class="text-2xl font-bold">DnD Helper</h1>
+    <nav class="space-x-6">
+      <a href="index.html" class="hover:underline">Home</a>
+      <a href="bbeg.html" class="hover:underline">BBEG</a>
+      <a href="crits.html" class="hover:underline">Crits/Fumbles</a>
+      <a href="npcs.html" class="hover:underline">NPCs</a>
+      <a href="towns.html" class="hover:underline">Towns</a>
+      <a href="generators.html" class="hover:underline">Generators</a>
+      <a href="quickref.html" class="hover:underline">Quick Reference</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Centered main content -->
+<main class="max-w-3xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-4">Critical Hit Tables</h1>
+
+  <div class="mb-6">
+    <button class="bg-green-700 text-white px-4 py-2 rounded mr-2" onclick="roll('weapon')">Roll Weapon Crit</button>
+    <button class="bg-indigo-700 text-white px-4 py-2 rounded" onclick="roll('spell')">Roll Spell Crit</button>
+  </div>
+
+  <p id="result" class="text-lg font-bold mb-4"></p>
+
+  <h2 class="text-xl font-bold mt-12 pt-4 border-t border-gray-300">Melee Crit Table</h2>
+  <ul id="weaponList"></ul>
+
+  <h2 class="text-xl font-bold mt-12 pt-4 border-t border-gray-300">Ranged Crit Table</h2>
+  <ul id="spellList"></ul>
+</main>
+
+<script>
+  const weaponCrits = [
+    { range: "1", title: "You feel accomplished, but nothing remarkable happens.", effect: "Regular critical hit." },
+    { range: "2-5", title: "You feel it is imperative to press the advantage no matter the cost.", effect: "Gain advantage on all attacks vs target until end of next turn, but enemies gain advantage on you." },
+    { range: "6-9", title: "Press the advantage, but stay aware.", effect: "Gain advantage next turn vs target; target gains advantage on you." },
+    { range: "10-14", title: "You know how to press the advantage.", effect: "Gain advantage on all attacks vs target until end of next turn." },
+    { range: "15-19", title: "You notice an escape route.", effect: "Use disengage action after your attack." },
+    { range: "20-24", title: "You feel the battle's rhythm.", effect: "Move to top of initiative after your turn." },
+    { range: "25-29", title: "You recognize your opponent’s technique.", effect: "+2 AC and advantage on saves vs target until next turn." },
+    { range: "30-39", title: "You harass your opponent.", effect: "Attempt to grapple/shove after your attack." },
+    { range: "40-49", title: "You harass with precision.", effect: "Auto succeed grapple/shove after your attack." },
+    { range: "50-59", title: "You attempt to disarm.", effect: "Take disarm action after your attack." },
+    { range: "60-69", title: "You disarm with style.", effect: "Take disarm action; steal or fling weapon up to 20ft." },
+    { range: "70-74", title: "Your senses heighten.", effect: "Use dodge action after your attack." },
+    { range: "75-79", title: "You knock your target over.", effect: "Target is knocked prone." },
+    { range: "80-84", title: "Your strike surprises.", effect: "Target is surprised until end of next turn." },
+    { range: "85-89", title: "You strike with force.", effect: "Roll extra damage dice beyond normal crit." },
+    { range: "90-94", title: "Extreme force!", effect: "Roll extra crit damage + target gains 1 exhaustion." },
+    { range: "95-99", title: "Debilitating force!", effect: "Extra damage + permanent injury (DM's call)." },
+    { range: "100", title: "Devastating force!", effect: "Extra damage + 1 exhaustion + permanent injury (DM's call)." },
+  ];
+
+  const spellCrits = [
+    { range: "1", title: "You feel accomplished, but nothing remarkable happens.", effect: "Regular spell critical hit." },
+    { range: "2-5", title: "You feel it is imperative to press the advantage no matter the cost.", effect: "You can choose to gain advantage on your next attack roll against your target, but all enemies have advantage on their attack rolls against you until the end of your next turn." },
+    { range: "6-9", title: "You feel it is imperative to press the advantage, but maintain awareness of your surroundings.", effect: "You can choose to gain advantage on your next attack roll against your target, your target has advantage on their attack rolls against you until the end of your next turn." },
+    { range: "10-14", title: "As you are fighting, you notice an effective route to escape danger.", effect: "You are able to use the disengage action after your attack." },
+    { range: "15-19", title: "You feel the eb and flow of the battle, and know where to make your next move.", effect: "After your turn you move to the top of the initiative order." },
+    { range: "20-29", title: "Your spell cripples your opponent.", effect: "Your target’s movement speed is cut in half for their next 2 turns." },
+    { range: "30-39", title: "Your spell attack knocks your target over.", effect: "Your target is knocked prone." },
+    { range: "40-49", title: "The light from your spell flashes near your target’s eyes", effect: "Your target is blinded until the end of their next turn." },
+    { range: "50-59", title: "You blast the target's weapons out of their hands.", effect: "Your target’s weapon is flung 1d6×5 feet away in a random direction." },
+    { range: "60-69", title: "The sight of your magic fills the target’s heart with fear.", effect: "Your target is frightened by you until you stop casting magic. You are able to discern the source of your target’s fear." },
+    { range: "70-74", title: "The force from your spell stuns your opponent.", effect: "Your target is incapacitated until the end of their next turn." },
+    { range: "75-79", title: "Your spell is incidentally infused with fey energy.", effect: "Roll 10d8. If your target’s current health is lower than the number rolled they fall asleep for 1 minute." },
+    { range: "80-84", title: "Your spell’s strike surprises your opponent.", effect: "Your target is surprised until the end of their next turn." },
+    { range: "85-89", title: "Your spell strikes with great force.", effect: "Roll an additional set of spell damage dice above and beyond your normal critical roll." },
+    { range: "90-94", title: "Your spell strikes with extreme force.", effect: "Roll an additional set of spell damage dice above and beyond your normal critical roll, and the target suffers one unit of exhaustion." },
+    { range: "96-99", title: "Your spell strikes with debilitating force.", effect: "Roll an additional set of spell damage dice above and beyond your normal critical roll, and the target suffers a permanent injury chosen by the DM. The injury can be healed with extended rest as determined by the DM." },
+    { range: "100", title: "Your spell strikes with devastating force.", effect: "Roll an additional set of spell damage dice above and beyond your normal critical roll, and the target suffers 1 unit of exhaustion and a permanent injury chosen by the DM." },
+  ];
+
+  function roll(type) {
+    const list = type === 'spell' ? spellCrits : weaponCrits;
+    const roll = Math.floor(Math.random() * 100) + 1;
+    const resultP = document.getElementById("result");
+
+    resultP.className = "result rolling";
+    resultP.textContent = "Rolling...";
+
+    setTimeout(() => {
+      const match = list.find(c => {
+        if (c.range.includes('-')) {
+          const [min, max] = c.range.split('-').map(Number);
+          return roll >= min && roll <= max;
+        } else {
+          return roll === Number(c.range);
+        }
+      });
+
+      resultP.className = "result";
+      resultP.innerHTML = `<strong>Roll: ${roll}</strong><br><em>${match.title}</em><br><strong>Effect:</strong> ${match.effect}`;
+    }, 1500);
+  }
+
+  function populateList(containerId, table) {
+    const list = document.getElementById(containerId);
+    table.forEach(c => {
+      const li = document.createElement("li");
+      li.className = "mb-4";
+
+      const formattedTitle = c.title.replace("Melee:", "<br>Melee:").replace("Ranged:", "<br>Ranged:");
+      const formattedEffect = c.effect.replace("Melee:", "<br>Melee:").replace("Ranged:", "<br>Ranged:");
+
+      li.innerHTML = `<strong>${c.range}</strong>: <em>${formattedTitle}</em><br><strong>Effect:</strong> ${formattedEffect}`;
+      list.appendChild(li);
+    });
+  }
+
+  populateList('weaponList', weaponCrits);
+  populateList('spellList', spellCrits);
+</script>
+
+</body>
+</html>

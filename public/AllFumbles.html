@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8" />
+    <title>Critical Fumble Tables</title>
+</head>
+<body class="bg-[#fefbf6] font-serif text-gray-900">
+
+<!-- Full-width navigation bar -->
+<header class="bg-purple-800 text-white p-4 shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">DnD Helper</h1>
+        <nav class="space-x-6">
+            <a href="index.html" class="hover:underline">Home</a>
+            <a href="bbeg.html" class="hover:underline">BBEG</a>
+            <a href="crits.html" class="hover:underline">Crits/Fumbles</a>
+            <a href="npcs.html" class="hover:underline">NPCs</a>
+            <a href="towns.html" class="hover:underline">Towns</a>
+            <a href="generators.html" class="hover:underline">Generators</a>
+            <a href="quickref.html" class="hover:underline">Quick Reference</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Centered main content -->
+<main class="max-w-3xl mx-auto px-4 py-8">
+
+    <h1 class="text-3xl font-bold mb-4">Critical Fumble Tables</h1>
+
+    <div class="mb-6">
+        <button class="bg-red-700 text-white px-4 py-2 rounded mr-2" onclick="rollFumble('weapon')">Roll Weapon Fumble</button>
+        <button class="bg-blue-900 text-white px-4 py-2 rounded" onclick="rollFumble('spell')">Roll Spell Fumble</button>
+    </div>
+
+    <p id="fumbleResult" class="text-lg font-bold mb-4"></p>
+
+    <h2 class="text-xl font-bold mt-12 pt-4 border-t border-gray-300">Weapon Fumble Table</h2>
+    <ul id="weaponList"></ul>
+
+    <h2 class="text-xl font-bold mt-12 pt-4 border-t border-gray-300">Spell Fumble Table</h2>
+    <ul id="spellList"></ul>
+</main>
+
+<script>
+    const weaponFumbles = [
+        { range: "1", title: "You are embarassed by your poor showing, but nothing remarkable happens.", effect: "You miss your attack." },
+        { range: "2-5", title: "You lose your combat footing, exposing yourself to your target.", effect: "Your target has advantage on their first attack roll against you next round." },
+        { range: "6-9", title: "You lose your combat footing, exposing yourself to your enemies.", effect: "Your enemies have advantage on their first attack roll against you next round." },
+        { range: "10-14", title: "You lose your combat footing, and have difficulty recovering.", effect: "Your enemies have advantage on their attack rolls against you until the end of your next turn." },
+        { range: "15-19", title: "Melee: You get tangled with your enemy and fall over. Ranged: You spill your quiver.", effect: "Melee: You are knocked prone and your movement is reduced to 0. Your target must succeed a DC 10 dexterity check or they are also knocked prone. Ranged: You must pick up arrows individually from the ground using your “environmental interaction”, or the “Use an Object” action to nock your bow." },
+        { range: "20-29", title: "You lose your balance while attacking.", effect: "You fall prone and your movement is reduced to 0." },
+        { range: "30-39", title: "As you attack your opponent you begin to fear that they are the superior combatant.", effect: "Disadvantage on your next attack roll against your target." },
+        { range: "40-49", title: "You miss an attack and gaze upon the chaos of the battle, causing your confidence to falter.", effect: "Disadvantage on your next attack roll against any target." },
+        { range: "50-59", title: "You lose your grip as you attack.", effect: "Roll a DC 10 Dexterity Check, on failure you drop your weapon at your feet." },
+        { range: "60-69", title: "Melee: The weapon slips from your hand as you attack. Ranged: Your ammunition gets lodged in its container.", effect: "Melee: Roll a DC 10 Dexterity Check, on failure you throw your weapon into your enemy’s space. Ranged: You must use an action to organize the ammunition in its case before you can make another ranged attack." },
+        { range: "70-79", title: "Melee: You lunge past an enemy exposing yourself to his attack. Ranged: Your missile startles your allies near your target.", effect: "Melee: Enemy you were attacking can use their reaction to perform an opportunity attack. Ranged: The target can perform an opportunity attack on any ally within melee range." },
+        { range: "80-84", title: "Missing what you thought was a critical blow causes you to panic.", effect: "End your current turn and you are surprised until the end of your next turn." },
+        { range: "85-89", title: "You attack wildly and lose track of the fight around you.", effect: "End your turn and move to the bottom of the initiative order at the start of the next round." },
+        { range: "90-94", title: "You lose your footing while attacking and fall to the ground bumping your head.", effect: "You fall prone. Roll a DC 10 constitution save, on failure you take 1d6 damage and are knocked unconscious for 1 minute or until you receive damage. On success take half damage and stay conscious." },
+        { range: "95-99", title: "You lose your footing while attacking and fall head first.", effect: "You fall prone. Roll a DC 15 constitution save, on failure take 2d6 damage and become unconscious for 1 minute or until you receive damage. On success take half damage and stay conscious." },
+        { range: "100", title: "You lose your footing while attacking and slam your head into the ground.", effect: "You fall prone, take 3d6 damage, and become unconscious for 1 minute or until you receive damage." },
+    ];
+
+    const spellFumbles = [
+        { range: "1", title: "You are embarassed by your poor showing, but nothing remarkable happens.", effect: "You miss your attack." },
+        { range: "2-5", title: "You get wrapped up in your spellcasting and forget to watch your target.", effect: "Your target has advantage on their first attack roll against you next round." },
+        { range: "6-9", title: "You forget to watch your surroundings while casting.", effect: "All enemies have advantage on their first attack roll against you next round." },
+        { range: "10-14", title: "You are so focused that you forget you're in battle.", effect: "All enemies have advantage on their attack rolls against you until the end of your next turn." },
+        { range: "15-19", title: "Your spell creates a large plume of smoke.", effect: "Area in 5 ft radius around you is heavily obscured for 1 minute. A strong breeze clears it in 1 round." },
+        { range: "20-29", title: "Your spell misfires and knocks you over.", effect: "You are knocked prone." },
+        { range: "30-39", title: "Your spell behaves strangely.", effect: "Disadvantage on spell attacks, enemies get advantage on spell saves until end of next turn." },
+        { range: "40-49", title: "Your spell startles nearby allies.", effect: "Target can use a reaction to attack an ally within melee range." },
+        { range: "50-59", title: "Your focus malfunctions.", effect: "You can't use material components until end of next turn." },
+        { range: "60-69", title: "Your arm cramps mid-cast.", effect: "You can't use somatic components until end of next turn." },
+        { range: "70-79", title: "You bite your tongue while casting.", effect: "You can't use verbal components until end of next turn." },
+        { range: "80-84", title: "Your spell misfires and dazes you.", effect: "End turn and move to bottom of initiative order." },
+        { range: "85-89", title: "Your spell misfires and panics you.", effect: "End current turn and you are surprised until end of next turn." },
+        { range: "90-94", title: "Your spell explodes and knocks you over.", effect: "Fall prone. DC 10 Con save or take 1d6 bludgeoning and be unconscious for 1 min. On success, take half and stay conscious." },
+        { range: "95-99", title: "Large magical explosion knocks you back.", effect: "Fall prone. DC 15 Con save or take 1d6 bludgeoning, 1d6 thunder damage, unconscious 1 min. On success, half damage, stay conscious." },
+        { range: "100", title: "Complete magical backfire.", effect: "Hit yourself with your spell. Fall prone, take 1d6 bludgeoning + 1d6 thunder damage, and go unconscious for 1 minute." },
+    ];
+
+    const resultP = document.getElementById("fumbleResult");
+
+    function rollFumble(type) {
+        resultP.className = "result rolling";
+        resultP.textContent = "Rolling...";
+        setTimeout(() => {
+            const table = type === "weapon" ? weaponFumbles : spellFumbles;
+            const roll = Math.floor(Math.random() * 100) + 1;
+            const match = table.find(c => {
+                if (c.range.includes("-")) {
+                    const [min, max] = c.range.split("-").map(Number);
+                    return roll >= min && roll <= max;
+                } else {
+                    return roll === Number(c.range);
+                }
+            });
+            resultP.className = "result";
+            resultP.innerHTML = `<strong>Roll: ${roll}</strong><br><em>${match.title}</em><br><strong>Effect:</strong> ${match.effect}`;
+        }, 1000);
+    }
+
+    function populateList(containerId, table) {
+        const list = document.getElementById(containerId);
+        table.forEach(c => {
+            const li = document.createElement("li");
+            li.className = "mb-4"; // Tilføjer mellemrum nedenunder hvert punkt
+
+            const formattedTitle = c.title
+                .replace("Melee:", "<br>Melee:")
+                .replace("Ranged:", "<br>Ranged:");
+
+            const formattedEffect = c.effect
+                .replace("Melee:", "<br>Melee:")
+                .replace("Ranged:", "<br>Ranged:");
+
+            li.innerHTML = `<span class="percent"><strong>${c.range}:</strong></span> <em>${formattedTitle}</em><br> <strong>Effect:</strong> ${formattedEffect}`;
+            list.appendChild(li);
+        });
+    }
+    populateList("weaponList", weaponFumbles);
+    populateList("spellList", spellFumbles);
+</script>
+
+</body>
+</html>
